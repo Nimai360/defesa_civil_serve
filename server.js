@@ -8,7 +8,16 @@ const port = 3001;
 app.use(cors());
 
 app.get('/getCemadenInfo', async (req, res) => {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ 
+        headless: true, // ou false, dependendo das suas necessidades
+      ignoreDefaultArgs: ["--disable-extensions"],
+      args: [
+        "--no-sandbox",
+        "--use-gl=egl",
+        "--disable-setuid-sandbox",
+      ],
+      ignoreHTTPSErrors: true,
+    });
     const page = await browser.newPage();
     await page.goto('http://resources.cemaden.gov.br/graficos/interativo/getJson2.php?uf=RJ');
     const bodyContent = await page.evaluate(() => document.body.innerHTML);
